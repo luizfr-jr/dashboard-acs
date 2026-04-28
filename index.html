@@ -7,11 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; background: #060E1A; font-family: 'Inter', system-ui, sans-serif; color: #F1F5F9; }
+  html, body { height: 100%; background: #F1F5F9; font-family: 'Inter', system-ui, sans-serif; color: #0F172A; }
   #root { min-height: 100%; }
   button { font-family: inherit; cursor: pointer; }
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-thumb { background: #1A3050; border-radius: 2px; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
 </style>
 </head>
 <body>
@@ -37,9 +37,9 @@ const App = () => {
   const { useState, useMemo } = React;
   const data = window.__DASH_DATA__;
 
-  const [ano, setAno]     = useState(2026);
-  const [mes, setMes]     = useState('Todos');
-  const [fs,  setFs]      = useState(false);
+  const [ano, setAno] = useState(2026);
+  const [mes, setMes] = useState('Todos');
+  const [fs,  setFs]  = useState(false);
 
   const anoData = data.porAno.find(a => a.ano === ano);
   const anoAnt  = data.porAno.find(a => a.ano === ano - 1);
@@ -51,10 +51,10 @@ const App = () => {
     return mesNum == null ? anoAnt.meses : anoAnt.meses.filter(m => m.mes === mesNum);
   }, [anoAnt, mesNum]);
 
-  const totalPessoas  = sum(periodo, 'pessoas');
-  const acsAtivos     = Math.max(...periodo.map(m => m.profissionais));
-  const pessoasPorAC  = totalPessoas / acsAtivos;
-  const totalVisitas  = sum(periodo, 'visitas');
+  const totalPessoas = sum(periodo, 'pessoas');
+  const acsAtivos    = Math.max(...periodo.map(m => m.profissionais));
+  const pessoasPorAC = totalPessoas / acsAtivos;
+  const totalVisitas = sum(periodo, 'visitas');
 
   const totalPessoasAnt = periodoAnt ? sum(periodoAnt, 'pessoas') : null;
   const acsAnt          = periodoAnt ? Math.max(...periodoAnt.map(m => m.profissionais)) : null;
@@ -66,46 +66,37 @@ const App = () => {
 
   const periodoLabel = mes === 'Todos' ? `1º Trimestre · ${ano}` : `${mes} · ${ano}`;
 
-  // Fullscreen toggle
   const toggleFs = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen?.();
-      setFs(true);
-    } else {
-      document.exitFullscreen?.();
-      setFs(false);
-    }
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen?.(); setFs(true); }
+    else { document.exitFullscreen?.(); setFs(false); }
   };
   React.useEffect(() => {
-    const handler = () => setFs(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', handler);
-    return () => document.removeEventListener('fullscreenchange', handler);
+    const h = () => setFs(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', h);
+    return () => document.removeEventListener('fullscreenchange', h);
   }, []);
 
   return (
-    <div style={{ background: '#060E1A', minHeight: '100vh', color: '#F1F5F9', fontFamily: '"Inter", system-ui, sans-serif', padding: '24px 40px 40px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div style={{ background: '#F1F5F9', minHeight: '100vh', color: '#0F172A', fontFamily: '"Inter", system-ui, sans-serif', padding: '24px 40px 40px', display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-      {/* ── Header ──────────────────────────────────────────────────────── */}
+      {/* ── Header ── */}
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, background: '#1D63D5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ width: 42, height: 42, borderRadius: 11, background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(37,99,235,0.35)' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>
           </div>
           <div>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase' }}>Secretaria Municipal de Saúde</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: '#F1F5F9', letterSpacing: '-0.01em' }}>Painel ACS — Atenção Básica</div>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: '#94A3B8', textTransform: 'uppercase' }}>Secretaria Municipal de Saúde</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em' }}>Painel ACS — Atenção Básica</div>
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          {/* Year filter */}
           <FilterGroup>
             {ANOS.map(a => (
               <FilterBtn key={a} active={a === ano} onClick={() => setAno(a)}>{a}</FilterBtn>
             ))}
           </FilterGroup>
-
-          {/* Month filter */}
           <FilterGroup accent>
             {MESES.map(m => (
               <FilterBtn key={m} active={m === mes} accent onClick={() => setMes(m)}>
@@ -113,43 +104,37 @@ const App = () => {
               </FilterBtn>
             ))}
           </FilterGroup>
-
-          {/* Fullscreen */}
-          <button onClick={toggleFs} title="Tela cheia (F)" style={{ background: '#0A1628', border: '1px solid #0F2030', color: '#475569', borderRadius: 8, padding: '9px 10px', lineHeight: 0, transition: 'color .15s' }}
-            onMouseEnter={e => e.currentTarget.style.color='#94A3B8'}
-            onMouseLeave={e => e.currentTarget.style.color='#475569'}>
+          <button onClick={toggleFs} title="Tela cheia" style={{ background: '#fff', border: '1px solid #E2E8F0', color: '#94A3B8', borderRadius: 8, padding: '9px 10px', lineHeight: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              {fs
-                ? <path d="M8 3v5H3M21 8h-5V3M3 16h5v5M16 21v-5h5"/>
-                : <path d="M8 3H3v5M21 3h-5v5M3 21h5v-5M21 21h-5v-5"/>}
+              {fs ? <path d="M8 3v5H3M21 8h-5V3M3 16h5v5M16 21v-5h5"/> : <path d="M8 3H3v5M21 3h-5v5M3 21h5v-5M21 21h-5v-5"/>}
             </svg>
           </button>
         </div>
       </header>
 
-      {/* ── Period divider ───────────────────────────────────────────────── */}
+      {/* ── Period divider ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div style={{ height: 1, flex: 1, background: '#0A1628' }} />
-        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#1D63D5', textTransform: 'uppercase' }}>{periodoLabel}</span>
-        <div style={{ height: 1, flex: 1, background: '#0A1628' }} />
+        <div style={{ height: 1, flex: 1, background: '#E2E8F0' }} />
+        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#2563EB', textTransform: 'uppercase' }}>{periodoLabel}</span>
+        <div style={{ height: 1, flex: 1, background: '#E2E8F0' }} />
       </div>
 
-      {/* ── KPI Cards ───────────────────────────────────────────────────── */}
+      {/* ── KPI Cards ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr 1fr', gap: 14 }}>
 
         {/* Hero — Pessoas */}
-        <div style={{ background: 'linear-gradient(135deg, #0D2044 0%, #0A1830 100%)', border: '1px solid #162A50', borderRadius: 16, padding: '26px 30px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -30, right: -30, width: 180, height: 180, borderRadius: '50%', background: 'rgba(29,99,213,0.12)', pointerEvents: 'none' }} />
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase', marginBottom: 10 }}>Pessoas alcançadas</div>
-          <div style={{ fontSize: 76, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalPessoas)}</div>
+        <div style={{ background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', border: '1px solid #BFDBFE', borderRadius: 16, padding: '26px 30px', position: 'relative', overflow: 'hidden', boxShadow: '0 1px 4px rgba(37,99,235,0.08)' }}>
+          <div style={{ position: 'absolute', top: -30, right: -30, width: 180, height: 180, borderRadius: '50%', background: 'rgba(37,99,235,0.07)', pointerEvents: 'none' }} />
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#64748B', textTransform: 'uppercase', marginBottom: 10 }}>Pessoas alcançadas</div>
+          <div style={{ fontSize: 76, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums', color: '#1E40AF' }}>{fmt(totalPessoas)}</div>
           <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             {yoyPessoas !== null && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 20, background: yoyPessoas >= 0 ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)', color: yoyPessoas >= 0 ? '#4ADE80' : '#F87171', fontSize: 14, fontWeight: 700 }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 20, background: yoyPessoas >= 0 ? 'rgba(22,163,74,0.12)' : 'rgba(220,38,38,0.10)', color: yoyPessoas >= 0 ? '#15803D' : '#DC2626', fontSize: 14, fontWeight: 700 }}>
                 {yoyPessoas >= 0 ? '↑' : '↓'} {Math.abs(yoyPessoas).toFixed(1)}%
               </span>
             )}
             {totalPessoasAnt !== null && (
-              <span style={{ fontSize: 12, color: '#334155' }}>
+              <span style={{ fontSize: 12, color: '#94A3B8' }}>
                 vs. {ano - 1}: <strong style={{ color: '#475569' }}>{fmt(totalPessoasAnt)}</strong>
               </span>
             )}
@@ -157,32 +142,32 @@ const App = () => {
         </div>
 
         {/* Agentes Comunitários */}
-        <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '22px 26px' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase', marginBottom: 10 }}>Agentes Comunitários</div>
-          <div style={{ fontSize: 60, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#22C55E' }}>{acsAtivos}</div>
-          <div style={{ fontSize: 12, color: '#1E4030', marginTop: 6 }}>ACs ativos no período</div>
+        <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: '22px 26px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#94A3B8', textTransform: 'uppercase', marginBottom: 10 }}>Agentes Comunitários</div>
+          <div style={{ fontSize: 60, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#16A34A' }}>{acsAtivos}</div>
+          <div style={{ fontSize: 12, color: '#CBD5E1', marginTop: 6 }}>ACs ativos no período</div>
           <DeltaBadge value={yoyAC} label={`vs. ${ano-1} (${acsAnt ?? '—'} ACs)`} style={{ marginTop: 12 }} />
         </div>
 
         {/* Pessoas / AC */}
-        <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '22px 26px' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase', marginBottom: 10 }}>Pessoas por Agente</div>
-          <div style={{ fontSize: 60, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#A78BFA' }}>{fmt(pessoasPorAC)}</div>
-          <div style={{ fontSize: 12, color: '#2D1E4A', marginTop: 6 }}>média por agente comunitário</div>
+        <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: '22px 26px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#94A3B8', textTransform: 'uppercase', marginBottom: 10 }}>Pessoas por Agente</div>
+          <div style={{ fontSize: 60, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#7C3AED' }}>{fmt(pessoasPorAC)}</div>
+          <div style={{ fontSize: 12, color: '#CBD5E1', marginTop: 6 }}>média por agente comunitário</div>
           <DeltaBadge value={yoyPPAC} label={`vs. ${ano-1} (${ppacAnt !== null ? fmt(ppacAnt) : '—'} p/AC)`} style={{ marginTop: 12 }} />
         </div>
       </div>
 
-      {/* ── Charts ──────────────────────────────────────────────────────── */}
+      {/* ── Charts ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 14 }}>
         <MonthlyChart anoData={anoData} anoAnt={anoAnt} selectedMes={mes} ano={ano} />
         <AnnualChart  data={data.porAno} ano={ano} mes={mes} />
       </div>
 
-      {/* ── Detail Table ─────────────────────────────────────────────────── */}
+      {/* ── Detail Table ── */}
       <DetailTable anoData={anoData} anoAnt={anoAnt} />
 
-      <footer style={{ textAlign: 'center', fontSize: 11, color: '#0F2030', paddingTop: 4 }}>
+      <footer style={{ textAlign: 'center', fontSize: 11, color: '#CBD5E1', paddingTop: 4 }}>
         Fonte: Sistema de gestão da Atenção Básica · Jan/2023 a Mar/2026
       </footer>
     </div>
@@ -190,8 +175,8 @@ const App = () => {
 };
 
 // ─── Filter UI ─────────────────────────────────────────────────────────────
-const FilterGroup = ({ children, accent }) => (
-  <div style={{ display: 'flex', background: '#080F1C', border: '1px solid #0A1628', borderRadius: 10, padding: 4, gap: 3 }}>
+const FilterGroup = ({ children }) => (
+  <div style={{ display: 'flex', background: '#fff', border: '1px solid #E2E8F0', borderRadius: 10, padding: 4, gap: 3, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
     {children}
   </div>
 );
@@ -200,8 +185,8 @@ const FilterBtn = ({ children, active, accent, onClick }) => (
   <button onClick={onClick} style={{
     padding: '7px 14px', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 700,
     transition: 'background 0.15s, color 0.15s',
-    background: active ? (accent ? '#162A42' : '#1D63D5') : 'transparent',
-    color:      active ? (accent ? '#38BDF8'  : '#fff')    : '#334155',
+    background: active ? (accent ? '#DBEAFE' : '#2563EB') : 'transparent',
+    color:      active ? (accent ? '#1D4ED8' : '#fff')    : '#94A3B8',
   }}>
     {children}
   </button>
@@ -212,10 +197,10 @@ const DeltaBadge = ({ value, label, style }) => {
   const pos = value >= 0;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 7, ...style }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: pos ? '#4ADE80' : '#F87171' }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: pos ? '#15803D' : '#DC2626' }}>
         {pos ? '↑' : '↓'} {Math.abs(value).toFixed(1)}%
       </span>
-      <span style={{ fontSize: 11, color: '#1E3050' }}>{label}</span>
+      <span style={{ fontSize: 11, color: '#CBD5E1' }}>{label}</span>
     </div>
   );
 };
@@ -240,69 +225,61 @@ const MonthlyChart = ({ anoData, anoAnt, selectedMes, ano }) => {
   const bh = v => (v / maxVal) * iH;
 
   return (
-    <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '18px 22px' }}>
-      <div style={{ fontSize: 13, fontWeight: 700, color: '#64748B', marginBottom: 2 }}>Evolução mensal — pessoas alcançadas</div>
-      <div style={{ fontSize: 11, color: '#1A2E44', marginBottom: 10 }}>Barras azuis = {ano} · Barras escuras = {ano - 1}</div>
+    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: '18px 22px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 2 }}>Evolução mensal — pessoas alcançadas</div>
+      <div style={{ fontSize: 11, color: '#CBD5E1', marginBottom: 10 }}>Barras azuis = {ano} · Barras cinzas = {ano - 1}</div>
 
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
-        {/* Y grid */}
         {[0, 0.25, 0.5, 0.75, 1].map((t, i) => (
           <g key={i}>
             <line x1={PAD.l} x2={W - PAD.r} y1={y(maxVal * t)} y2={y(maxVal * t)}
-              stroke={t === 0 ? '#0F1E30' : '#0A1628'} strokeWidth={1} strokeDasharray={t === 0 ? '' : '3 4'} />
-            <text x={PAD.l - 8} y={y(maxVal * t) + 4} fontSize={10} fill="#1E3050" textAnchor="end">
+              stroke={t === 0 ? '#E2E8F0' : '#F1F5F9'} strokeWidth={1} strokeDasharray={t === 0 ? '' : '3 4'} />
+            <text x={PAD.l - 8} y={y(maxVal * t) + 4} fontSize={10} fill="#CBD5E1" textAnchor="end">
               {t === 0 ? '0' : fmtK(maxVal * t)}
             </text>
           </g>
         ))}
 
-        {/* Bars */}
         {meses.map((m, i) => {
-          const antMes    = anoAnt?.meses?.find(a => a.mes === m.mes);
-          const isHL      = selectedMes === 'Todos' || m.mes === MES_NUM[selectedMes];
-          const gCx       = PAD.l + i * groupW + groupW / 2;
-          const hasAnt    = !!antMes;
-          const currX     = gCx + (hasAnt ? BAR_GAP / 2 : -BAR_W / 2);
-          const antX      = gCx - BAR_W - BAR_GAP / 2;
-          const ppac      = Math.round(m.pessoas / m.profissionais);
-          const ppacAntV  = antMes ? Math.round(antMes.pessoas / antMes.profissionais) : null;
-          const yoyV      = antMes ? pct(m.pessoas, antMes.pessoas) : null;
+          const antMes   = anoAnt?.meses?.find(a => a.mes === m.mes);
+          const isHL     = selectedMes === 'Todos' || m.mes === MES_NUM[selectedMes];
+          const gCx      = PAD.l + i * groupW + groupW / 2;
+          const hasAnt   = !!antMes;
+          const currX    = gCx + (hasAnt ? BAR_GAP / 2 : -BAR_W / 2);
+          const antX     = gCx - BAR_W - BAR_GAP / 2;
+          const ppac     = Math.round(m.pessoas / m.profissionais);
+          const yoyV     = antMes ? pct(m.pessoas, antMes.pessoas) : null;
 
           return (
-            <g key={m.mes} opacity={isHL ? 1 : 0.28}>
-              {/* Prev year bar */}
+            <g key={m.mes} opacity={isHL ? 1 : 0.25}>
               {hasAnt && (
                 <>
-                  <rect x={antX} y={y(antMes.pessoas)} width={BAR_W} height={bh(antMes.pessoas)} fill="#1A3050" rx={3} />
-                  <text x={antX + BAR_W / 2} y={y(antMes.pessoas) - 5} fontSize={10} fill="#1E3A5A" textAnchor="middle">
+                  <rect x={antX} y={y(antMes.pessoas)} width={BAR_W} height={bh(antMes.pessoas)} fill="#CBD5E1" rx={3} />
+                  <text x={antX + BAR_W / 2} y={y(antMes.pessoas) - 5} fontSize={10} fill="#94A3B8" textAnchor="middle">
                     {fmtK(antMes.pessoas)}
                   </text>
                 </>
               )}
 
-              {/* Current year bar */}
-              <rect x={currX} y={y(m.pessoas)} width={BAR_W} height={bh(m.pessoas)} fill={isHL ? '#1D63D5' : '#152A48'} rx={3} />
-              <text x={currX + BAR_W / 2} y={y(m.pessoas) - 5} fontSize={11} fontWeight={700} fill={isHL ? '#94A3B8' : '#1E3050'} textAnchor="middle">
+              <rect x={currX} y={y(m.pessoas)} width={BAR_W} height={bh(m.pessoas)} fill={isHL ? '#2563EB' : '#BFDBFE'} rx={3} />
+              <text x={currX + BAR_W / 2} y={y(m.pessoas) - 5} fontSize={11} fontWeight={700} fill={isHL ? '#475569' : '#CBD5E1'} textAnchor="middle">
                 {fmtK(m.pessoas)}
               </text>
 
-              {/* YoY badge */}
               {yoyV !== null && isHL && (
-                <text x={gCx} y={y(m.pessoas) - 18} fontSize={10} fontWeight={700} fill={yoyV >= 0 ? '#22C55E' : '#F87171'} textAnchor="middle">
+                <text x={gCx} y={y(m.pessoas) - 18} fontSize={10} fontWeight={700} fill={yoyV >= 0 ? '#16A34A' : '#DC2626'} textAnchor="middle">
                   {yoyV >= 0 ? '↑' : '↓'}{Math.abs(yoyV).toFixed(1)}%
                 </text>
               )}
 
-              {/* Pessoas/AC */}
-              <text x={gCx} y={H - PAD.b + 16} fontSize={14} fontWeight={800} fill={isHL ? '#A78BFA' : '#1E2A3A'} textAnchor="middle">
+              <text x={gCx} y={H - PAD.b + 16} fontSize={14} fontWeight={800} fill={isHL ? '#7C3AED' : '#DDD6FE'} textAnchor="middle">
                 {ppac}
               </text>
-              <text x={gCx} y={H - PAD.b + 29} fontSize={9} fontWeight={600} fill={isHL ? '#4B3A7A' : '#0F1828'} textAnchor="middle" letterSpacing="0.06em">
+              <text x={gCx} y={H - PAD.b + 29} fontSize={9} fontWeight={600} fill={isHL ? '#A78BFA' : '#EDE9FE'} textAnchor="middle" letterSpacing="0.06em">
                 PESS/AC
               </text>
 
-              {/* Month label */}
-              <text x={gCx} y={H - PAD.b + 48} fontSize={12} fontWeight={700} fill={isHL ? '#475569' : '#1A2A3A'} textAnchor="middle">
+              <text x={gCx} y={H - PAD.b + 48} fontSize={12} fontWeight={700} fill={isHL ? '#475569' : '#CBD5E1'} textAnchor="middle">
                 {m.mesNome.toUpperCase()}
               </text>
             </g>
@@ -334,21 +311,20 @@ const AnnualChart = ({ data, ano, mes }) => {
   const y  = v => PAD.t + iH - (v / maxVal) * iH;
   const bh = v => (v / maxVal) * iH;
 
-  const COLORS = { 2023: '#1A3050', 2024: '#1A3A5A', 2025: '#1A4A6A', 2026: '#1D63D5' };
+  const COLORS = { 2023: '#BFDBFE', 2024: '#93C5FD', 2025: '#60A5FA', 2026: '#2563EB' };
 
   return (
-    <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '18px 22px' }}>
-      <div style={{ fontSize: 13, fontWeight: 700, color: '#64748B', marginBottom: 2 }}>Comparativo anual</div>
-      <div style={{ fontSize: 11, color: '#1A2E44', marginBottom: 10 }}>
+    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: '18px 22px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#334155', marginBottom: 2 }}>Comparativo anual</div>
+      <div style={{ fontSize: 11, color: '#CBD5E1', marginBottom: 10 }}>
         {mes === 'Todos' ? '1º Trimestre' : mes} — total de pessoas
       </div>
 
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
-        {/* Y grid */}
         {[0, 0.5, 1].map((t, i) => (
           <g key={i}>
-            <line x1={PAD.l} x2={W - PAD.r} y1={y(maxVal * t)} y2={y(maxVal * t)} stroke="#0A1628" strokeWidth={1} strokeDasharray={t === 0 ? '' : '3 4'} />
-            <text x={PAD.l - 8} y={y(maxVal * t) + 4} fontSize={10} fill="#1E3050" textAnchor="end">
+            <line x1={PAD.l} x2={W - PAD.r} y1={y(maxVal * t)} y2={y(maxVal * t)} stroke="#F1F5F9" strokeWidth={1} strokeDasharray={t === 0 ? '' : '3 4'} />
+            <text x={PAD.l - 8} y={y(maxVal * t) + 4} fontSize={10} fill="#CBD5E1" textAnchor="end">
               {t === 0 ? '0' : fmtK(maxVal * t)}
             </text>
           </g>
@@ -362,32 +338,27 @@ const AnnualChart = ({ data, ano, mes }) => {
 
           return (
             <g key={d.ano}>
-              {/* Bar */}
               <rect x={gCx - BAR_W / 2} y={y(d.pessoas)} width={BAR_W} height={bh(d.pessoas)}
-                fill={isHL ? '#1D63D5' : COLORS[d.ano]} rx={4} />
+                fill={COLORS[d.ano]} rx={4} />
 
-              {/* Value */}
-              <text x={gCx} y={y(d.pessoas) - 6} fontSize={11} fontWeight={700} fill={isHL ? '#94A3B8' : '#1E3A5A'} textAnchor="middle">
+              <text x={gCx} y={y(d.pessoas) - 6} fontSize={11} fontWeight={700} fill={isHL ? '#1E40AF' : '#94A3B8'} textAnchor="middle">
                 {fmtK(d.pessoas)}
               </text>
 
-              {/* YoY */}
               {yoyV !== null && (
-                <text x={gCx} y={y(d.pessoas) - 18} fontSize={10} fontWeight={700} fill={yoyV >= 0 ? '#22C55E' : '#F87171'} textAnchor="middle">
+                <text x={gCx} y={y(d.pessoas) - 18} fontSize={10} fontWeight={700} fill={yoyV >= 0 ? '#16A34A' : '#DC2626'} textAnchor="middle">
                   {yoyV >= 0 ? '+' : ''}{yoyV.toFixed(1)}%
                 </text>
               )}
 
-              {/* Pessoas/AC */}
-              <text x={gCx} y={H - PAD.b + 16} fontSize={13} fontWeight={800} fill={isHL ? '#A78BFA' : '#1A2A3A'} textAnchor="middle">
+              <text x={gCx} y={H - PAD.b + 16} fontSize={13} fontWeight={800} fill={isHL ? '#7C3AED' : '#DDD6FE'} textAnchor="middle">
                 {Math.round(d.ppac)}
               </text>
-              <text x={gCx} y={H - PAD.b + 27} fontSize={9} fontWeight={600} fill={isHL ? '#4B3A7A' : '#0F1828'} textAnchor="middle" letterSpacing="0.06em">
+              <text x={gCx} y={H - PAD.b + 27} fontSize={9} fontWeight={600} fill={isHL ? '#A78BFA' : '#EDE9FE'} textAnchor="middle" letterSpacing="0.06em">
                 PESS/AC
               </text>
 
-              {/* Year label */}
-              <text x={gCx} y={H - PAD.b + 46} fontSize={12} fontWeight={isHL ? 800 : 600} fill={isHL ? '#2B7BE0' : '#2A3A50'} textAnchor="middle">
+              <text x={gCx} y={H - PAD.b + 46} fontSize={12} fontWeight={isHL ? 800 : 600} fill={isHL ? '#1D4ED8' : '#94A3B8'} textAnchor="middle">
                 {d.ano}
               </text>
             </g>
@@ -407,25 +378,25 @@ const DetailTable = ({ anoData, anoAnt }) => {
   const trimYoy      = totalAntP ? pct(totalPessoas, totalAntP) : null;
 
   const TH = ({ children, right }) => (
-    <th style={{ padding: '10px 14px', textAlign: right ? 'right' : 'left', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#1E3050', textTransform: 'uppercase', borderBottom: '1px solid #0A1C2E', whiteSpace: 'nowrap' }}>
+    <th style={{ padding: '10px 16px', textAlign: right ? 'right' : 'left', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#94A3B8', textTransform: 'uppercase', borderBottom: '2px solid #F1F5F9', whiteSpace: 'nowrap' }}>
       {children}
     </th>
   );
   const TD = ({ children, right, highlight, dim }) => (
-    <td style={{ padding: '11px 14px', textAlign: right ? 'right' : 'left', fontSize: 14, fontWeight: highlight ? 800 : dim ? 400 : 600, color: highlight ? '#F1F5F9' : dim ? '#1E3050' : '#94A3B8', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid #070E1A' }}>
+    <td style={{ padding: '12px 16px', textAlign: right ? 'right' : 'left', fontSize: 14, fontWeight: highlight ? 800 : dim ? 400 : 600, color: highlight ? '#0F172A' : dim ? '#CBD5E1' : '#475569', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid #F8FAFC' }}>
       {children}
     </td>
   );
 
   return (
-    <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, overflow: 'hidden' }}>
-      <div style={{ padding: '16px 22px 12px', fontSize: 13, fontWeight: 700, color: '#64748B' }}>
+    <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+      <div style={{ padding: '16px 22px 12px', fontSize: 13, fontWeight: 700, color: '#334155' }}>
         Detalhe por mês — {anoData.ano}
       </div>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
+            <tr style={{ background: '#F8FAFC' }}>
               <TH>Mês</TH>
               <TH right>Pessoas</TH>
               <TH right>ACs</TH>
@@ -441,34 +412,36 @@ const DetailTable = ({ anoData, anoAnt }) => {
               const ppac  = Math.round(m.pessoas / m.profissionais);
 
               return (
-                <tr key={m.mes}>
-                  <TD><span style={{ color: '#475569', fontWeight: 700 }}>{MESES[m.mes]}</span></TD>
+                <tr key={m.mes} style={{ transition: 'background .1s' }}
+                  onMouseEnter={e => e.currentTarget.style.background='#F8FAFC'}
+                  onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+                  <TD><span style={{ color: '#334155', fontWeight: 700 }}>{MESES[m.mes]}</span></TD>
                   <TD right highlight>{fmt(m.pessoas)}</TD>
-                  <TD right><span style={{ color: '#22C55E' }}>{m.profissionais}</span></TD>
-                  <TD right><span style={{ color: '#A78BFA', fontSize: 15, fontWeight: 800 }}>{ppac}</span></TD>
+                  <TD right><span style={{ color: '#16A34A', fontWeight: 700 }}>{m.profissionais}</span></TD>
+                  <TD right><span style={{ color: '#7C3AED', fontSize: 15, fontWeight: 800 }}>{ppac}</span></TD>
                   <TD right dim>{fmt(m.visitas)}</TD>
                   <TD right>
                     {yoyV !== null ? (
-                      <span style={{ color: yoyV >= 0 ? '#4ADE80' : '#F87171', fontWeight: 700, fontSize: 13 }}>
+                      <span style={{ color: yoyV >= 0 ? '#15803D' : '#DC2626', fontWeight: 700, fontSize: 13 }}>
                         {yoyV >= 0 ? '↑' : '↓'} {Math.abs(yoyV).toFixed(1)}%
-                        {antM && <span style={{ fontSize: 11, color: '#1E3050', marginLeft: 5 }}>({fmt(antM.pessoas)})</span>}
+                        {antM && <span style={{ fontSize: 11, color: '#CBD5E1', marginLeft: 5 }}>({fmt(antM.pessoas)})</span>}
                       </span>
-                    ) : <span style={{ color: '#1E3050' }}>—</span>}
+                    ) : <span style={{ color: '#CBD5E1' }}>—</span>}
                   </TD>
                 </tr>
               );
             })}
           </tbody>
           <tfoot>
-            <tr style={{ background: '#060E18' }}>
-              <td style={{ padding: '12px 14px', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: '#334155', textTransform: 'uppercase' }}>Total Trim.</td>
-              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 16, fontWeight: 900, color: '#2B7BE0', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalPessoas)}</td>
-              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 14, fontWeight: 700, color: '#22C55E' }}>{maxAC} <span style={{ fontSize: 10, color: '#1E3050' }}>max</span></td>
-              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 15, fontWeight: 900, color: '#A78BFA', fontVariantNumeric: 'tabular-nums' }}>{Math.round(totalPessoas / maxAC)}</td>
-              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 13, fontWeight: 600, color: '#1E3050', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalVisitas)}</td>
-              <td style={{ padding: '12px 14px', textAlign: 'right' }}>
+            <tr style={{ background: '#F8FAFC', borderTop: '2px solid #E2E8F0' }}>
+              <td style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: '#94A3B8', textTransform: 'uppercase' }}>Total Trim.</td>
+              <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: 16, fontWeight: 900, color: '#1D4ED8', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalPessoas)}</td>
+              <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: 14, fontWeight: 700, color: '#16A34A' }}>{maxAC} <span style={{ fontSize: 10, color: '#CBD5E1' }}>max</span></td>
+              <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: 15, fontWeight: 900, color: '#7C3AED', fontVariantNumeric: 'tabular-nums' }}>{Math.round(totalPessoas / maxAC)}</td>
+              <td style={{ padding: '12px 16px', textAlign: 'right', fontSize: 13, fontWeight: 600, color: '#CBD5E1', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalVisitas)}</td>
+              <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                 {trimYoy !== null && (
-                  <span style={{ color: trimYoy >= 0 ? '#4ADE80' : '#F87171', fontWeight: 700, fontSize: 14 }}>
+                  <span style={{ color: trimYoy >= 0 ? '#15803D' : '#DC2626', fontWeight: 700, fontSize: 14 }}>
                     {trimYoy >= 0 ? '↑' : '↓'} {Math.abs(trimYoy).toFixed(1)}%
                   </span>
                 )}
@@ -481,7 +454,7 @@ const DetailTable = ({ anoData, anoAnt }) => {
   );
 };
 
-// ─── Root (loading wrapper) ────────────────────────────────────────────────
+// ─── Root ──────────────────────────────────────────────────────────────────
 const Root = () => {
   const [ready, setReady] = React.useState(!!window.__DASH_DATA__);
   React.useEffect(() => {
@@ -491,8 +464,13 @@ const Root = () => {
   }, []);
 
   if (!ready) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#060E1A', color: '#1D63D5', fontFamily: '"Inter", system-ui', fontSize: 15, gap: 12 }}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1D2E44" strokeWidth="2"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1D63D5" strokeWidth="2" strokeLinecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></path></svg>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F1F5F9', color: '#2563EB', fontFamily: '"Inter", system-ui', fontSize: 15, gap: 12 }}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="#E2E8F0" strokeWidth="2"/>
+        <path d="M12 3a9 9 0 0 1 9 9" stroke="#2563EB" strokeWidth="2" strokeLinecap="round">
+          <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/>
+        </path>
+      </svg>
       Carregando dados…
     </div>
   );
