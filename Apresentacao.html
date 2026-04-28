@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard ACS — Modo Apresentação</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; min-height: 100%; background: #F4F6FA; font-family: 'Inter', system-ui, sans-serif; }
+  #root { min-height: 100vh; }
+
+  /* Floating toolbar */
+  .pres-toolbar {
+    position: fixed; bottom: 18px; right: 18px; z-index: 1000;
+    display: flex; gap: 8px; align-items: center;
+    background: rgba(14, 27, 44, 0.88);
+    backdrop-filter: blur(10px);
+    border-radius: 999px; padding: 6px;
+    box-shadow: 0 6px 24px rgba(14, 27, 44, 0.35);
+    transition: opacity 0.25s;
+    opacity: 0.45;
+  }
+  .pres-toolbar:hover { opacity: 1; }
+  .pres-toolbar.hidden { opacity: 0; pointer-events: none; }
+  .pres-toolbar button {
+    background: transparent; border: none; color: rgba(255,255,255,0.9);
+    font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px;
+    cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px;
+  }
+  .pres-toolbar button:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .pres-toolbar a {
+    color: rgba(255,255,255,0.9); text-decoration: none;
+    font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pres-toolbar a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .pres-toolbar .sep { width: 1px; height: 20px; background: rgba(255,255,255,0.18); }
+
+  /* Fullscreen: extra-discreet until hover */
+  body.fs .pres-toolbar { opacity: 0.15; }
+  body.fs .pres-toolbar:hover { opacity: 1; }
+
+  @media print {
+    .pres-toolbar { display: none; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<div class="pres-toolbar" id="toolbar">
+  <a href="Dashboard ACS.html" title="Voltar para visão geral das opções">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar
+  </a>
+  <span class="sep"></span>
+  <button id="fs-btn" title="Tela cheia (F)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    Tela cheia
+  </button>
+  <button id="print-btn" title="Imprimir / PDF (P)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
+    Imprimir
+  </button>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="data-loader.jsx"></script>
+<script type="text/babel" src="v2-storytelling.jsx"></script>
+
+<script type="text/babel">
+  const Root = () => {
+    const [ready, setReady] = React.useState(!!window.__DASH_DATA__);
+    React.useEffect(() => {
+      if (window.__DASH_DATA__) { setReady(true); return; }
+      const t = setInterval(() => {
+        if (window.__DASH_DATA__) { setReady(true); clearInterval(t); }
+      }, 50);
+      return () => clearInterval(t);
+    }, []);
+    if (!ready) return <div style={{ padding: 40, color: '#4A5A72' }}>Carregando dados…</div>;
+    return <V2 />;
+  };
+  ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+
+  // Toolbar actions
+  const fsBtn = document.getElementById('fs-btn');
+  const printBtn = document.getElementById('print-btn');
+  function toggleFs() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+      document.body.classList.add('fs');
+    } else {
+      document.exitFullscreen?.();
+      document.body.classList.remove('fs');
+    }
+  }
+  fsBtn.addEventListener('click', toggleFs);
+  document.addEventListener('fullscreenchange', () => {
+    document.body.classList.toggle('fs', !!document.fullscreenElement);
+  });
+  printBtn.addEventListener('click', () => window.print());
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'f' || e.key === 'F') toggleFs();
+    if (e.key === 'p' || e.key === 'P') { e.preventDefault(); window.print(); }
+    if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen?.();
+  });
+</script>
+</body>
+</html>
