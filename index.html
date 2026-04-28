@@ -3,109 +3,504 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard ACS — Modo Apresentação</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Painel ACS — Atenção Básica</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  html, body { margin: 0; padding: 0; min-height: 100%; background: #F4F6FA; font-family: 'Inter', system-ui, sans-serif; }
-  #root { min-height: 100vh; }
-
-  /* Floating toolbar */
-  .pres-toolbar {
-    position: fixed; bottom: 18px; right: 18px; z-index: 1000;
-    display: flex; gap: 8px; align-items: center;
-    background: rgba(14, 27, 44, 0.88);
-    backdrop-filter: blur(10px);
-    border-radius: 999px; padding: 6px;
-    box-shadow: 0 6px 24px rgba(14, 27, 44, 0.35);
-    transition: opacity 0.25s;
-    opacity: 0.45;
-  }
-  .pres-toolbar:hover { opacity: 1; }
-  .pres-toolbar.hidden { opacity: 0; pointer-events: none; }
-  .pres-toolbar button {
-    background: transparent; border: none; color: rgba(255,255,255,0.9);
-    font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px;
-    cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px;
-  }
-  .pres-toolbar button:hover { background: rgba(255,255,255,0.1); color: #fff; }
-  .pres-toolbar a {
-    color: rgba(255,255,255,0.9); text-decoration: none;
-    font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .pres-toolbar a:hover { background: rgba(255,255,255,0.1); color: #fff; }
-  .pres-toolbar .sep { width: 1px; height: 20px; background: rgba(255,255,255,0.18); }
-
-  /* Fullscreen: extra-discreet until hover */
-  body.fs .pres-toolbar { opacity: 0.15; }
-  body.fs .pres-toolbar:hover { opacity: 1; }
-
-  @media print {
-    .pres-toolbar { display: none; }
-    body { background: #fff; }
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #060E1A; font-family: 'Inter', system-ui, sans-serif; color: #F1F5F9; }
+  #root { min-height: 100%; }
+  button { font-family: inherit; cursor: pointer; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: #1A3050; border-radius: 2px; }
 </style>
 </head>
 <body>
 <div id="root"></div>
 
-<div class="pres-toolbar" id="toolbar">
-<button id="fs-btn" title="Tela cheia (F)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-    Tela cheia
-  </button>
-  <button id="print-btn" title="Imprimir / PDF (P)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
-    Imprimir
-  </button>
-</div>
-
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-
 <script type="text/babel" src="data-loader.jsx"></script>
-<script type="text/babel" src="v2-storytelling.jsx"></script>
 
 <script type="text/babel">
-  const Root = () => {
-    const [ready, setReady] = React.useState(!!window.__DASH_DATA__);
-    React.useEffect(() => {
-      if (window.__DASH_DATA__) { setReady(true); return; }
-      const t = setInterval(() => {
-        if (window.__DASH_DATA__) { setReady(true); clearInterval(t); }
-      }, 50);
-      return () => clearInterval(t);
-    }, []);
-    if (!ready) return <div style={{ padding: 40, color: '#4A5A72' }}>Carregando dados…</div>;
-    return <V2 />;
-  };
-  ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+const ANOS = [2023, 2024, 2025, 2026];
+const MESES = ['Todos', 'Janeiro', 'Fevereiro', 'Março'];
+const MES_NUM = { Todos: null, Janeiro: 1, Fevereiro: 2, Março: 3 };
 
-  // Toolbar actions
-  const fsBtn = document.getElementById('fs-btn');
-  const printBtn = document.getElementById('print-btn');
-  function toggleFs() {
+const sum  = (arr, k) => arr.reduce((s, x) => s + x[k], 0);
+const fmt  = n => new Intl.NumberFormat('pt-BR').format(Math.round(n));
+const fmtK = n => (n / 1000).toFixed(1) + 'k';
+const pct  = (c, p) => p ? ((c - p) / p) * 100 : null;
+
+// ─── App ───────────────────────────────────────────────────────────────────
+const App = () => {
+  const { useState, useMemo } = React;
+  const data = window.__DASH_DATA__;
+
+  const [ano, setAno]     = useState(2026);
+  const [mes, setMes]     = useState('Todos');
+  const [fs,  setFs]      = useState(false);
+
+  const anoData = data.porAno.find(a => a.ano === ano);
+  const anoAnt  = data.porAno.find(a => a.ano === ano - 1);
+
+  const mesNum = MES_NUM[mes];
+  const periodo    = useMemo(() => mesNum == null ? anoData.meses : anoData.meses.filter(m => m.mes === mesNum), [anoData, mesNum]);
+  const periodoAnt = useMemo(() => {
+    if (!anoAnt) return null;
+    return mesNum == null ? anoAnt.meses : anoAnt.meses.filter(m => m.mes === mesNum);
+  }, [anoAnt, mesNum]);
+
+  const totalPessoas  = sum(periodo, 'pessoas');
+  const acsAtivos     = Math.max(...periodo.map(m => m.profissionais));
+  const pessoasPorAC  = totalPessoas / acsAtivos;
+  const totalVisitas  = sum(periodo, 'visitas');
+
+  const totalPessoasAnt = periodoAnt ? sum(periodoAnt, 'pessoas') : null;
+  const acsAnt          = periodoAnt ? Math.max(...periodoAnt.map(m => m.profissionais)) : null;
+  const ppacAnt         = (totalPessoasAnt && acsAnt) ? totalPessoasAnt / acsAnt : null;
+
+  const yoyPessoas = pct(totalPessoas, totalPessoasAnt);
+  const yoyAC      = pct(acsAtivos, acsAnt);
+  const yoyPPAC    = pct(pessoasPorAC, ppacAnt);
+
+  const periodoLabel = mes === 'Todos' ? `1º Trimestre · ${ano}` : `${mes} · ${ano}`;
+
+  // Fullscreen toggle
+  const toggleFs = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen?.();
-      document.body.classList.add('fs');
+      setFs(true);
     } else {
       document.exitFullscreen?.();
-      document.body.classList.remove('fs');
+      setFs(false);
     }
-  }
-  fsBtn.addEventListener('click', toggleFs);
-  document.addEventListener('fullscreenchange', () => {
-    document.body.classList.toggle('fs', !!document.fullscreenElement);
-  });
-  printBtn.addEventListener('click', () => window.print());
+  };
+  React.useEffect(() => {
+    const handler = () => setFs(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handler);
+    return () => document.removeEventListener('fullscreenchange', handler);
+  }, []);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'f' || e.key === 'F') toggleFs();
-    if (e.key === 'p' || e.key === 'P') { e.preventDefault(); window.print(); }
-    if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen?.();
+  return (
+    <div style={{ background: '#060E1A', minHeight: '100vh', color: '#F1F5F9', fontFamily: '"Inter", system-ui, sans-serif', padding: '24px 40px 40px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+      {/* ── Header ──────────────────────────────────────────────────────── */}
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 10, background: '#1D63D5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>
+          </div>
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase' }}>Secretaria Municipal de Saúde</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#F1F5F9', letterSpacing: '-0.01em' }}>Painel ACS — Atenção Básica</div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          {/* Year filter */}
+          <FilterGroup>
+            {ANOS.map(a => (
+              <FilterBtn key={a} active={a === ano} onClick={() => setAno(a)}>{a}</FilterBtn>
+            ))}
+          </FilterGroup>
+
+          {/* Month filter */}
+          <FilterGroup accent>
+            {MESES.map(m => (
+              <FilterBtn key={m} active={m === mes} accent onClick={() => setMes(m)}>
+                {m === 'Todos' ? 'Trim.' : m.slice(0, 3)}
+              </FilterBtn>
+            ))}
+          </FilterGroup>
+
+          {/* Fullscreen */}
+          <button onClick={toggleFs} title="Tela cheia (F)" style={{ background: '#0A1628', border: '1px solid #0F2030', color: '#475569', borderRadius: 8, padding: '9px 10px', lineHeight: 0, transition: 'color .15s' }}
+            onMouseEnter={e => e.currentTarget.style.color='#94A3B8'}
+            onMouseLeave={e => e.currentTarget.style.color='#475569'}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              {fs
+                ? <path d="M8 3v5H3M21 8h-5V3M3 16h5v5M16 21v-5h5"/>
+                : <path d="M8 3H3v5M21 3h-5v5M3 21h5v-5M21 21h-5v-5"/>}
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      {/* ── Period divider ───────────────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ height: 1, flex: 1, background: '#0A1628' }} />
+        <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#1D63D5', textTransform: 'uppercase' }}>{periodoLabel}</span>
+        <div style={{ height: 1, flex: 1, background: '#0A1628' }} />
+      </div>
+
+      {/* ── KPI Cards ───────────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr 1fr', gap: 14 }}>
+
+        {/* Hero — Pessoas */}
+        <div style={{ background: 'linear-gradient(135deg, #0D2044 0%, #0A1830 100%)', border: '1px solid #162A50', borderRadius: 16, padding: '26px 30px', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: -30, right: -30, width: 180, height: 180, borderRadius: '50%', background: 'rgba(29,99,213,0.12)', pointerEvents: 'none' }} />
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase', marginBottom: 10 }}>Pessoas alcançadas</div>
+          <div style={{ fontSize: 76, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalPessoas)}</div>
+          <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            {yoyPessoas !== null && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 20, background: yoyPessoas >= 0 ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)', color: yoyPessoas >= 0 ? '#4ADE80' : '#F87171', fontSize: 14, fontWeight: 700 }}>
+                {yoyPessoas >= 0 ? '↑' : '↓'} {Math.abs(yoyPessoas).toFixed(1)}%
+              </span>
+            )}
+            {totalPessoasAnt !== null && (
+              <span style={{ fontSize: 12, color: '#334155' }}>
+                vs. {ano - 1}: <strong style={{ color: '#475569' }}>{fmt(totalPessoasAnt)}</strong>
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Agentes Comunitários */}
+        <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '22px 26px' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase', marginBottom: 10 }}>Agentes Comunitários</div>
+          <div style={{ fontSize: 60, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#22C55E' }}>{acsAtivos}</div>
+          <div style={{ fontSize: 12, color: '#1E4030', marginTop: 6 }}>ACs ativos no período</div>
+          <DeltaBadge value={yoyAC} label={`vs. ${ano-1} (${acsAnt ?? '—'} ACs)`} style={{ marginTop: 12 }} />
+        </div>
+
+        {/* Pessoas / AC */}
+        <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '22px 26px' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: '#334155', textTransform: 'uppercase', marginBottom: 10 }}>Pessoas por Agente</div>
+          <div style={{ fontSize: 60, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#A78BFA' }}>{fmt(pessoasPorAC)}</div>
+          <div style={{ fontSize: 12, color: '#2D1E4A', marginTop: 6 }}>média por agente comunitário</div>
+          <DeltaBadge value={yoyPPAC} label={`vs. ${ano-1} (${ppacAnt !== null ? fmt(ppacAnt) : '—'} p/AC)`} style={{ marginTop: 12 }} />
+        </div>
+      </div>
+
+      {/* ── Charts ──────────────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 14 }}>
+        <MonthlyChart anoData={anoData} anoAnt={anoAnt} selectedMes={mes} ano={ano} />
+        <AnnualChart  data={data.porAno} ano={ano} mes={mes} />
+      </div>
+
+      {/* ── Detail Table ─────────────────────────────────────────────────── */}
+      <DetailTable anoData={anoData} anoAnt={anoAnt} />
+
+      <footer style={{ textAlign: 'center', fontSize: 11, color: '#0F2030', paddingTop: 4 }}>
+        Fonte: Sistema de gestão da Atenção Básica · Jan/2023 a Mar/2026
+      </footer>
+    </div>
+  );
+};
+
+// ─── Filter UI ─────────────────────────────────────────────────────────────
+const FilterGroup = ({ children, accent }) => (
+  <div style={{ display: 'flex', background: '#080F1C', border: '1px solid #0A1628', borderRadius: 10, padding: 4, gap: 3 }}>
+    {children}
+  </div>
+);
+
+const FilterBtn = ({ children, active, accent, onClick }) => (
+  <button onClick={onClick} style={{
+    padding: '7px 14px', border: 'none', borderRadius: 7, fontSize: 13, fontWeight: 700,
+    transition: 'background 0.15s, color 0.15s',
+    background: active ? (accent ? '#162A42' : '#1D63D5') : 'transparent',
+    color:      active ? (accent ? '#38BDF8'  : '#fff')    : '#334155',
+  }}>
+    {children}
+  </button>
+);
+
+const DeltaBadge = ({ value, label, style }) => {
+  if (value === null || value === undefined) return null;
+  const pos = value >= 0;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 7, ...style }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: pos ? '#4ADE80' : '#F87171' }}>
+        {pos ? '↑' : '↓'} {Math.abs(value).toFixed(1)}%
+      </span>
+      <span style={{ fontSize: 11, color: '#1E3050' }}>{label}</span>
+    </div>
+  );
+};
+
+// ─── Monthly Bar Chart ─────────────────────────────────────────────────────
+const MonthlyChart = ({ anoData, anoAnt, selectedMes, ano }) => {
+  const meses = anoData.meses;
+  const allVals = [
+    ...meses.map(m => m.pessoas),
+    ...(anoAnt ? anoAnt.meses.map(m => m.pessoas) : []),
+  ];
+  const maxVal = Math.max(...allVals) * 1.12;
+
+  const W = 600, H = 250;
+  const PAD = { t: 36, r: 24, b: 66, l: 52 };
+  const iW = W - PAD.l - PAD.r;
+  const iH = H - PAD.t - PAD.b;
+  const groupW  = iW / meses.length;
+  const BAR_W   = 36;
+  const BAR_GAP = 5;
+  const y  = v => PAD.t + iH - (v / maxVal) * iH;
+  const bh = v => (v / maxVal) * iH;
+
+  return (
+    <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '18px 22px' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#64748B', marginBottom: 2 }}>Evolução mensal — pessoas alcançadas</div>
+      <div style={{ fontSize: 11, color: '#1A2E44', marginBottom: 10 }}>Barras azuis = {ano} · Barras escuras = {ano - 1}</div>
+
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
+        {/* Y grid */}
+        {[0, 0.25, 0.5, 0.75, 1].map((t, i) => (
+          <g key={i}>
+            <line x1={PAD.l} x2={W - PAD.r} y1={y(maxVal * t)} y2={y(maxVal * t)}
+              stroke={t === 0 ? '#0F1E30' : '#0A1628'} strokeWidth={1} strokeDasharray={t === 0 ? '' : '3 4'} />
+            <text x={PAD.l - 8} y={y(maxVal * t) + 4} fontSize={10} fill="#1E3050" textAnchor="end">
+              {t === 0 ? '0' : fmtK(maxVal * t)}
+            </text>
+          </g>
+        ))}
+
+        {/* Bars */}
+        {meses.map((m, i) => {
+          const antMes    = anoAnt?.meses?.find(a => a.mes === m.mes);
+          const isHL      = selectedMes === 'Todos' || m.mes === MES_NUM[selectedMes];
+          const gCx       = PAD.l + i * groupW + groupW / 2;
+          const hasAnt    = !!antMes;
+          const currX     = gCx + (hasAnt ? BAR_GAP / 2 : -BAR_W / 2);
+          const antX      = gCx - BAR_W - BAR_GAP / 2;
+          const ppac      = Math.round(m.pessoas / m.profissionais);
+          const ppacAntV  = antMes ? Math.round(antMes.pessoas / antMes.profissionais) : null;
+          const yoyV      = antMes ? pct(m.pessoas, antMes.pessoas) : null;
+
+          return (
+            <g key={m.mes} opacity={isHL ? 1 : 0.28}>
+              {/* Prev year bar */}
+              {hasAnt && (
+                <>
+                  <rect x={antX} y={y(antMes.pessoas)} width={BAR_W} height={bh(antMes.pessoas)} fill="#1A3050" rx={3} />
+                  <text x={antX + BAR_W / 2} y={y(antMes.pessoas) - 5} fontSize={10} fill="#1E3A5A" textAnchor="middle">
+                    {fmtK(antMes.pessoas)}
+                  </text>
+                </>
+              )}
+
+              {/* Current year bar */}
+              <rect x={currX} y={y(m.pessoas)} width={BAR_W} height={bh(m.pessoas)} fill={isHL ? '#1D63D5' : '#152A48'} rx={3} />
+              <text x={currX + BAR_W / 2} y={y(m.pessoas) - 5} fontSize={11} fontWeight={700} fill={isHL ? '#94A3B8' : '#1E3050'} textAnchor="middle">
+                {fmtK(m.pessoas)}
+              </text>
+
+              {/* YoY badge */}
+              {yoyV !== null && isHL && (
+                <text x={gCx} y={y(m.pessoas) - 18} fontSize={10} fontWeight={700} fill={yoyV >= 0 ? '#22C55E' : '#F87171'} textAnchor="middle">
+                  {yoyV >= 0 ? '↑' : '↓'}{Math.abs(yoyV).toFixed(1)}%
+                </text>
+              )}
+
+              {/* Pessoas/AC */}
+              <text x={gCx} y={H - PAD.b + 16} fontSize={14} fontWeight={800} fill={isHL ? '#A78BFA' : '#1E2A3A'} textAnchor="middle">
+                {ppac}
+              </text>
+              <text x={gCx} y={H - PAD.b + 29} fontSize={9} fontWeight={600} fill={isHL ? '#4B3A7A' : '#0F1828'} textAnchor="middle" letterSpacing="0.06em">
+                PESS/AC
+              </text>
+
+              {/* Month label */}
+              <text x={gCx} y={H - PAD.b + 48} fontSize={12} fontWeight={700} fill={isHL ? '#475569' : '#1A2A3A'} textAnchor="middle">
+                {m.mesNome.toUpperCase()}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+};
+
+// ─── Annual Comparison Chart ───────────────────────────────────────────────
+const AnnualChart = ({ data, ano, mes }) => {
+  const anoTotals = data.map(d => {
+    const mesNum = MES_NUM[mes];
+    const p = mesNum == null ? d.meses : d.meses.filter(m => m.mes === mesNum);
+    if (!p.length) return { ano: d.ano, pessoas: 0, ac: 0, ppac: 0 };
+    const totalP = sum(p, 'pessoas');
+    const maxAC  = Math.max(...p.map(m => m.profissionais));
+    return { ano: d.ano, pessoas: totalP, ac: maxAC, ppac: totalP / maxAC };
   });
+
+  const maxVal = Math.max(...anoTotals.map(d => d.pessoas)) * 1.14;
+  const W = 340, H = 250;
+  const PAD = { t: 36, r: 20, b: 66, l: 52 };
+  const iW = W - PAD.l - PAD.r;
+  const iH = H - PAD.t - PAD.b;
+  const BAR_W  = 42;
+  const groupW = iW / anoTotals.length;
+  const y  = v => PAD.t + iH - (v / maxVal) * iH;
+  const bh = v => (v / maxVal) * iH;
+
+  const COLORS = { 2023: '#1A3050', 2024: '#1A3A5A', 2025: '#1A4A6A', 2026: '#1D63D5' };
+
+  return (
+    <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, padding: '18px 22px' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#64748B', marginBottom: 2 }}>Comparativo anual</div>
+      <div style={{ fontSize: 11, color: '#1A2E44', marginBottom: 10 }}>
+        {mes === 'Todos' ? '1º Trimestre' : mes} — total de pessoas
+      </div>
+
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', display: 'block' }}>
+        {/* Y grid */}
+        {[0, 0.5, 1].map((t, i) => (
+          <g key={i}>
+            <line x1={PAD.l} x2={W - PAD.r} y1={y(maxVal * t)} y2={y(maxVal * t)} stroke="#0A1628" strokeWidth={1} strokeDasharray={t === 0 ? '' : '3 4'} />
+            <text x={PAD.l - 8} y={y(maxVal * t) + 4} fontSize={10} fill="#1E3050" textAnchor="end">
+              {t === 0 ? '0' : fmtK(maxVal * t)}
+            </text>
+          </g>
+        ))}
+
+        {anoTotals.map((d, i) => {
+          const prev  = anoTotals[i - 1];
+          const yoyV  = prev && prev.pessoas ? pct(d.pessoas, prev.pessoas) : null;
+          const isHL  = d.ano === ano;
+          const gCx   = PAD.l + i * groupW + groupW / 2;
+
+          return (
+            <g key={d.ano}>
+              {/* Bar */}
+              <rect x={gCx - BAR_W / 2} y={y(d.pessoas)} width={BAR_W} height={bh(d.pessoas)}
+                fill={isHL ? '#1D63D5' : COLORS[d.ano]} rx={4} />
+
+              {/* Value */}
+              <text x={gCx} y={y(d.pessoas) - 6} fontSize={11} fontWeight={700} fill={isHL ? '#94A3B8' : '#1E3A5A'} textAnchor="middle">
+                {fmtK(d.pessoas)}
+              </text>
+
+              {/* YoY */}
+              {yoyV !== null && (
+                <text x={gCx} y={y(d.pessoas) - 18} fontSize={10} fontWeight={700} fill={yoyV >= 0 ? '#22C55E' : '#F87171'} textAnchor="middle">
+                  {yoyV >= 0 ? '+' : ''}{yoyV.toFixed(1)}%
+                </text>
+              )}
+
+              {/* Pessoas/AC */}
+              <text x={gCx} y={H - PAD.b + 16} fontSize={13} fontWeight={800} fill={isHL ? '#A78BFA' : '#1A2A3A'} textAnchor="middle">
+                {Math.round(d.ppac)}
+              </text>
+              <text x={gCx} y={H - PAD.b + 27} fontSize={9} fontWeight={600} fill={isHL ? '#4B3A7A' : '#0F1828'} textAnchor="middle" letterSpacing="0.06em">
+                PESS/AC
+              </text>
+
+              {/* Year label */}
+              <text x={gCx} y={H - PAD.b + 46} fontSize={12} fontWeight={isHL ? 800 : 600} fill={isHL ? '#2B7BE0' : '#2A3A50'} textAnchor="middle">
+                {d.ano}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+};
+
+// ─── Detail Table ──────────────────────────────────────────────────────────
+const DetailTable = ({ anoData, anoAnt }) => {
+  const totalPessoas = sum(anoData.meses, 'pessoas');
+  const totalVisitas = sum(anoData.meses, 'visitas');
+  const maxAC        = Math.max(...anoData.meses.map(m => m.profissionais));
+  const totalAntP    = anoAnt ? sum(anoAnt.meses, 'pessoas') : null;
+  const trimYoy      = totalAntP ? pct(totalPessoas, totalAntP) : null;
+
+  const TH = ({ children, right }) => (
+    <th style={{ padding: '10px 14px', textAlign: right ? 'right' : 'left', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: '#1E3050', textTransform: 'uppercase', borderBottom: '1px solid #0A1C2E', whiteSpace: 'nowrap' }}>
+      {children}
+    </th>
+  );
+  const TD = ({ children, right, highlight, dim }) => (
+    <td style={{ padding: '11px 14px', textAlign: right ? 'right' : 'left', fontSize: 14, fontWeight: highlight ? 800 : dim ? 400 : 600, color: highlight ? '#F1F5F9' : dim ? '#1E3050' : '#94A3B8', fontVariantNumeric: 'tabular-nums', borderBottom: '1px solid #070E1A' }}>
+      {children}
+    </td>
+  );
+
+  return (
+    <div style={{ background: '#07111E', border: '1px solid #0A1C2E', borderRadius: 16, overflow: 'hidden' }}>
+      <div style={{ padding: '16px 22px 12px', fontSize: 13, fontWeight: 700, color: '#64748B' }}>
+        Detalhe por mês — {anoData.ano}
+      </div>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <TH>Mês</TH>
+              <TH right>Pessoas</TH>
+              <TH right>ACs</TH>
+              <TH right>Pessoas / AC</TH>
+              <TH right>Visitas</TH>
+              <TH right>Δ vs {anoData.ano - 1}</TH>
+            </tr>
+          </thead>
+          <tbody>
+            {anoData.meses.map(m => {
+              const antM  = anoAnt?.meses?.find(a => a.mes === m.mes);
+              const yoyV  = antM ? pct(m.pessoas, antM.pessoas) : null;
+              const ppac  = Math.round(m.pessoas / m.profissionais);
+
+              return (
+                <tr key={m.mes}>
+                  <TD><span style={{ color: '#475569', fontWeight: 700 }}>{MESES[m.mes]}</span></TD>
+                  <TD right highlight>{fmt(m.pessoas)}</TD>
+                  <TD right><span style={{ color: '#22C55E' }}>{m.profissionais}</span></TD>
+                  <TD right><span style={{ color: '#A78BFA', fontSize: 15, fontWeight: 800 }}>{ppac}</span></TD>
+                  <TD right dim>{fmt(m.visitas)}</TD>
+                  <TD right>
+                    {yoyV !== null ? (
+                      <span style={{ color: yoyV >= 0 ? '#4ADE80' : '#F87171', fontWeight: 700, fontSize: 13 }}>
+                        {yoyV >= 0 ? '↑' : '↓'} {Math.abs(yoyV).toFixed(1)}%
+                        {antM && <span style={{ fontSize: 11, color: '#1E3050', marginLeft: 5 }}>({fmt(antM.pessoas)})</span>}
+                      </span>
+                    ) : <span style={{ color: '#1E3050' }}>—</span>}
+                  </TD>
+                </tr>
+              );
+            })}
+          </tbody>
+          <tfoot>
+            <tr style={{ background: '#060E18' }}>
+              <td style={{ padding: '12px 14px', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: '#334155', textTransform: 'uppercase' }}>Total Trim.</td>
+              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 16, fontWeight: 900, color: '#2B7BE0', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalPessoas)}</td>
+              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 14, fontWeight: 700, color: '#22C55E' }}>{maxAC} <span style={{ fontSize: 10, color: '#1E3050' }}>max</span></td>
+              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 15, fontWeight: 900, color: '#A78BFA', fontVariantNumeric: 'tabular-nums' }}>{Math.round(totalPessoas / maxAC)}</td>
+              <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 13, fontWeight: 600, color: '#1E3050', fontVariantNumeric: 'tabular-nums' }}>{fmt(totalVisitas)}</td>
+              <td style={{ padding: '12px 14px', textAlign: 'right' }}>
+                {trimYoy !== null && (
+                  <span style={{ color: trimYoy >= 0 ? '#4ADE80' : '#F87171', fontWeight: 700, fontSize: 14 }}>
+                    {trimYoy >= 0 ? '↑' : '↓'} {Math.abs(trimYoy).toFixed(1)}%
+                  </span>
+                )}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// ─── Root (loading wrapper) ────────────────────────────────────────────────
+const Root = () => {
+  const [ready, setReady] = React.useState(!!window.__DASH_DATA__);
+  React.useEffect(() => {
+    if (window.__DASH_DATA__) { setReady(true); return; }
+    const t = setInterval(() => { if (window.__DASH_DATA__) { setReady(true); clearInterval(t); } }, 50);
+    return () => clearInterval(t);
+  }, []);
+
+  if (!ready) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#060E1A', color: '#1D63D5', fontFamily: '"Inter", system-ui', fontSize: 15, gap: 12 }}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#1D2E44" strokeWidth="2"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1D63D5" strokeWidth="2" strokeLinecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.8s" repeatCount="indefinite"/></path></svg>
+      Carregando dados…
+    </div>
+  );
+
+  return <App />;
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
 </script>
 </body>
 </html>
