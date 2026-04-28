@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard ACS — Atenção Básica</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #0E1B2C; font-family: 'Inter', system-ui, sans-serif; }
+  #root { height: 100%; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script>
+  // Load data inline so all dashboards share it without a fetch.
+</script>
+
+<script type="text/babel" src="data-loader.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="v1-institucional.jsx"></script>
+<script type="text/babel" src="v2-storytelling.jsx"></script>
+<script type="text/babel" src="v3-executive.jsx"></script>
+
+<script type="text/babel">
+  const Root = () => {
+    const [ready, setReady] = React.useState(!!window.__DASH_DATA__);
+    React.useEffect(() => {
+      if (window.__DASH_DATA__) { setReady(true); return; }
+      const t = setInterval(() => {
+        if (window.__DASH_DATA__) { setReady(true); clearInterval(t); }
+      }, 50);
+      return () => clearInterval(t);
+    }, []);
+    if (!ready) return <div style={{ color: '#fff', padding: 40 }}>Carregando dados…</div>;
+
+    return (
+      <DesignCanvas title="Dashboard ACS — 3 direções" subtitle="Painel executivo · Atenção Básica · 2026">
+        <DCSection id="dashboards" title="Variações de Layout" subtitle="Mesmos dados, três tratamentos. Clique em um artboard para abrir em tela cheia.">
+          <DCArtboard id="v1" label="01 · Institucional clássico" width={1280} height={920}>
+            <V1 />
+          </DCArtboard>
+          <DCArtboard id="v3" label="02 · Executivo denso (uma tela)" width={1440} height={900}>
+            <V3 />
+          </DCArtboard>
+          <DCArtboard id="v2" label="03 · Data-storytelling vertical" width={1280} height={1900}>
+            <V2 />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+    );
+  };
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<Root />);
+</script>
+</body>
+</html>

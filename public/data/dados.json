@@ -1,0 +1,374 @@
+{
+  "totalGeralProfissionais": 126,
+  "totalGeralFamilias": 56942,
+  "totalGeralPessoas": 121051,
+  "totalGeralVisitas": 72590,
+  "pctMedia": 26.94,
+  "periodos": [
+    {
+      "ano": 2023,
+      "mes": "Janeiro",
+      "profissionais": 90,
+      "familias": 4738,
+      "pctVisitadas": 26.79,
+      "pessoas": 10397,
+      "visitas": 6049
+    },
+    {
+      "ano": 2023,
+      "mes": "Fevereiro",
+      "profissionais": 93,
+      "familias": 4406,
+      "pctVisitadas": 24.61,
+      "pessoas": 8635,
+      "visitas": 5502
+    },
+    {
+      "ano": 2023,
+      "mes": "Março",
+      "profissionais": 93,
+      "familias": 4766,
+      "pctVisitadas": 26.13,
+      "pessoas": 9886,
+      "visitas": 6236
+    },
+    {
+      "ano": 2024,
+      "mes": "Janeiro",
+      "profissionais": 86,
+      "familias": 4220,
+      "pctVisitadas": 25.9,
+      "pessoas": 9007,
+      "visitas": 5404
+    },
+    {
+      "ano": 2024,
+      "mes": "Fevereiro",
+      "profissionais": 90,
+      "familias": 3695,
+      "pctVisitadas": 21.26,
+      "pessoas": 7669,
+      "visitas": 4716
+    },
+    {
+      "ano": 2024,
+      "mes": "Março",
+      "profissionais": 88,
+      "familias": 4305,
+      "pctVisitadas": 25.49,
+      "pessoas": 8862,
+      "visitas": 5581
+    },
+    {
+      "ano": 2025,
+      "mes": "Janeiro",
+      "profissionais": 104,
+      "familias": 5407,
+      "pctVisitadas": 29.67,
+      "pessoas": 11832,
+      "visitas": 7134
+    },
+    {
+      "ano": 2025,
+      "mes": "Fevereiro",
+      "profissionais": 103,
+      "familias": 4566,
+      "pctVisitadas": 26.31,
+      "pessoas": 9557,
+      "visitas": 5904
+    },
+    {
+      "ano": 2025,
+      "mes": "Março",
+      "profissionais": 103,
+      "familias": 5221,
+      "pctVisitadas": 29.58,
+      "pessoas": 11201,
+      "visitas": 6443
+    },
+    {
+      "ano": 2026,
+      "mes": "Janeiro",
+      "profissionais": 96,
+      "familias": 4460,
+      "pctVisitadas": 26.7,
+      "pessoas": 9666,
+      "visitas": 5539
+    },
+    {
+      "ano": 2026,
+      "mes": "Fevereiro",
+      "profissionais": 105,
+      "familias": 4297,
+      "pctVisitadas": 23.95,
+      "pessoas": 9053,
+      "visitas": 5455
+    },
+    {
+      "ano": 2026,
+      "mes": "Março",
+      "profissionais": 115,
+      "familias": 6861,
+      "pctVisitadas": 34.6,
+      "pessoas": 15286,
+      "visitas": 8627
+    }
+  ],
+  "porAno": [
+    {
+      "ano": 2023,
+      "pessoas": 28918,
+      "visitas": 17787,
+      "familias": 13910,
+      "profissionaisMax": 93,
+      "profissionaisAvg": 92,
+      "meses": [
+        {
+          "ano": 2023,
+          "mes": "Janeiro",
+          "profissionais": 90,
+          "familias": 4738,
+          "pctVisitadas": 26.79,
+          "pessoas": 10397,
+          "visitas": 6049
+        },
+        {
+          "ano": 2023,
+          "mes": "Fevereiro",
+          "profissionais": 93,
+          "familias": 4406,
+          "pctVisitadas": 24.61,
+          "pessoas": 8635,
+          "visitas": 5502
+        },
+        {
+          "ano": 2023,
+          "mes": "Março",
+          "profissionais": 93,
+          "familias": 4766,
+          "pctVisitadas": 26.13,
+          "pessoas": 9886,
+          "visitas": 6236
+        }
+      ]
+    },
+    {
+      "ano": 2024,
+      "pessoas": 25538,
+      "visitas": 15701,
+      "familias": 12220,
+      "profissionaisMax": 90,
+      "profissionaisAvg": 88,
+      "meses": [
+        {
+          "ano": 2024,
+          "mes": "Janeiro",
+          "profissionais": 86,
+          "familias": 4220,
+          "pctVisitadas": 25.9,
+          "pessoas": 9007,
+          "visitas": 5404
+        },
+        {
+          "ano": 2024,
+          "mes": "Fevereiro",
+          "profissionais": 90,
+          "familias": 3695,
+          "pctVisitadas": 21.26,
+          "pessoas": 7669,
+          "visitas": 4716
+        },
+        {
+          "ano": 2024,
+          "mes": "Março",
+          "profissionais": 88,
+          "familias": 4305,
+          "pctVisitadas": 25.49,
+          "pessoas": 8862,
+          "visitas": 5581
+        }
+      ]
+    },
+    {
+      "ano": 2025,
+      "pessoas": 32590,
+      "visitas": 19481,
+      "familias": 15194,
+      "profissionaisMax": 104,
+      "profissionaisAvg": 103,
+      "meses": [
+        {
+          "ano": 2025,
+          "mes": "Janeiro",
+          "profissionais": 104,
+          "familias": 5407,
+          "pctVisitadas": 29.67,
+          "pessoas": 11832,
+          "visitas": 7134
+        },
+        {
+          "ano": 2025,
+          "mes": "Fevereiro",
+          "profissionais": 103,
+          "familias": 4566,
+          "pctVisitadas": 26.31,
+          "pessoas": 9557,
+          "visitas": 5904
+        },
+        {
+          "ano": 2025,
+          "mes": "Março",
+          "profissionais": 103,
+          "familias": 5221,
+          "pctVisitadas": 29.58,
+          "pessoas": 11201,
+          "visitas": 6443
+        }
+      ]
+    },
+    {
+      "ano": 2026,
+      "pessoas": 34005,
+      "visitas": 19621,
+      "familias": 15618,
+      "profissionaisMax": 115,
+      "profissionaisAvg": 105,
+      "meses": [
+        {
+          "ano": 2026,
+          "mes": "Janeiro",
+          "profissionais": 96,
+          "familias": 4460,
+          "pctVisitadas": 26.7,
+          "pessoas": 9666,
+          "visitas": 5539
+        },
+        {
+          "ano": 2026,
+          "mes": "Fevereiro",
+          "profissionais": 105,
+          "familias": 4297,
+          "pctVisitadas": 23.95,
+          "pessoas": 9053,
+          "visitas": 5455
+        },
+        {
+          "ano": 2026,
+          "mes": "Março",
+          "profissionais": 115,
+          "familias": 6861,
+          "pctVisitadas": 34.6,
+          "pessoas": 15286,
+          "visitas": 8627
+        }
+      ]
+    }
+  ],
+  "topProfs": [
+    {
+      "nome": "NADIA PEREIRA LOPES",
+      "meses": 12,
+      "pessoas": 3692,
+      "visitas": 1889,
+      "pessoasMes": 307.7
+    },
+    {
+      "nome": "ERANI ROMERO GUERRA",
+      "meses": 12,
+      "pessoas": 2803,
+      "visitas": 1707,
+      "pessoasMes": 233.6
+    },
+    {
+      "nome": "VANESSA MARISE FALCAO CAVALHEIRO",
+      "meses": 11,
+      "pessoas": 3872,
+      "visitas": 1624,
+      "pessoasMes": 352
+    },
+    {
+      "nome": "LAURECI DOS SANTOS RODRIGUES",
+      "meses": 12,
+      "pessoas": 1573,
+      "visitas": 1499,
+      "pessoasMes": 131.1
+    },
+    {
+      "nome": "ARIELA BAUMART MACHADO",
+      "meses": 12,
+      "pessoas": 2960,
+      "visitas": 1301,
+      "pessoasMes": 246.7
+    },
+    {
+      "nome": "ZILDA ORTACA DA LUZ",
+      "meses": 12,
+      "pessoas": 1630,
+      "visitas": 1270,
+      "pessoasMes": 135.8
+    },
+    {
+      "nome": "MATHEUS DE OLIVEIRA DE ALMEIDA",
+      "meses": 12,
+      "pessoas": 1430,
+      "visitas": 1268,
+      "pessoasMes": 119.2
+    },
+    {
+      "nome": "MARIA BATISTA DE SANTANA",
+      "meses": 11,
+      "pessoas": 1329,
+      "visitas": 1222,
+      "pessoasMes": 120.8
+    },
+    {
+      "nome": "ELTON PAVAO MELO",
+      "meses": 12,
+      "pessoas": 1507,
+      "visitas": 1160,
+      "pessoasMes": 125.6
+    },
+    {
+      "nome": "STIFANI RICHELE MEIRA BRAGA",
+      "meses": 12,
+      "pessoas": 1154,
+      "visitas": 1154,
+      "pessoasMes": 96.2
+    },
+    {
+      "nome": "JOICE CARRION MACHADO",
+      "meses": 12,
+      "pessoas": 1324,
+      "visitas": 1146,
+      "pessoasMes": 110.3
+    },
+    {
+      "nome": "MONICA ANDREIA FERNANDEZ VERFE",
+      "meses": 12,
+      "pessoas": 1495,
+      "visitas": 1072,
+      "pessoasMes": 124.6
+    },
+    {
+      "nome": "JULIARA MUNHOZ ARIAS",
+      "meses": 12,
+      "pessoas": 1525,
+      "visitas": 1050,
+      "pessoasMes": 127.1
+    },
+    {
+      "nome": "JOAO CARLOS LEAO DA SILVA",
+      "meses": 9,
+      "pessoas": 1355,
+      "visitas": 991,
+      "pessoasMes": 150.6
+    },
+    {
+      "nome": "MINEIA SILVA DE SOUZA",
+      "meses": 10,
+      "pessoas": 2206,
+      "visitas": 950,
+      "pessoasMes": 220.6
+    }
+  ]
+}
